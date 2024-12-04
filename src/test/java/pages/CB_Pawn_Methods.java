@@ -23,6 +23,7 @@ public class CB_Pawn_Methods extends CB_Methods {
               run_Block_Check();
               run_Queen_Check();
 
+
           } else if (Piece01_X == Piece02_X && Piece02_Y == Piece01_Y +2){
               run_Rush_Check();
 

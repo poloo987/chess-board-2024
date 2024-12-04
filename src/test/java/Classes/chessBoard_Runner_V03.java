@@ -3,9 +3,11 @@ package Classes;
 
 import pages.CB_GameBoard;
 
+import java.io.FileNotFoundException;
+
 
 public class chessBoard_Runner_V03 {
-    public static void main(String[] args)  {
+    public static void main(String[] args) throws FileNotFoundException {
 //look up Coordinates.class in java
 
         // make this the home page
@@ -14,6 +16,7 @@ public class chessBoard_Runner_V03 {
 
         System.out.println("pick your game mode  ");
         System.out.println("1 = chess match PvP ");
+        //getCB_GameBoard.run_SaveFile();
         getCB_GameBoard.select_Piece();
 
         //System.out.println("2 = tutorial - comming soon  ");

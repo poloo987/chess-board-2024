@@ -101,33 +101,34 @@ public class CB_Methods {
 
 
 
-    public static void check_movement() {
+    public static boolean check_movement() {
         System.out.println("checking movement");
-
         //add code to not allow piece 1 == piece 2
+       boolean checker = true;
+
 
         switch (PieceMain_01) {
             case "Pawn":
                 getPawn.pawn_Activate();
                 break;
-
-            case "Rook":
-                getRook.rook_Activate();
+            case "Rook": //tested -passed 11/27
+                checker= getRook.rook_Activate();
                 break;
-            case "Knight":
+            case "Knight"://tested -passed 11/27
                 getKnight.knight_Activate();
                 break;
-            case "Bishop":
-                getBishop.bishop_Activate();
+            case "Bishop"://tested -passed 11/29
+                checker = getBishop.bishop_Activate();
                 break;
-            case "Queen":
-                getQueen.queen_Activate();
+            case "Queen"://tested -passed 12/3
+                checker = getQueen.queen_Activate();
                 break;
-            case "King":
-                getKing.king_Activate();
+            case "King"://tested -passed 12/3
+                checker =getKing.king_Activate();
                 break;
 
-        }
+        } 
+        return checker;
     }
 
 
@@ -144,90 +145,110 @@ public class CB_Methods {
         }
         return false;
     }
-    public static boolean new_Block_Check(int x,int y) {
+    public static boolean new_Block_Check(int x,int y) { //tested -passed 11/27
         Test =Chessborad [y-1][x-1];// -1 to turn back java cord
         if (Test.equals("-000-")){
             System.out.println("passed run_Block_Check");
             return true;
         }else{
             System.out.println("failed run_Block_Check");
+            return false;
         }
-        return false;
     }
 
     public static boolean cross_Mvt_Check(int Piece01_X,int Piece01_Y,int Piece02_X,int Piece02_Y){
-        Boolean test = false;
+        Boolean crossMvtAnswer = true;
         int P1_X=Piece01_X+1;int P1_Y= Piece01_Y+1;int P2_X=Piece02_X+1;int P2_Y= Piece02_Y+1;
         if (P1_X == P2_X  ){                    // check for up or down movement
             int movement = Math.abs(P1_Y-P2_Y);// counter for loop
             if ((P1_Y-P2_Y)>=1){//postive or neg version
                 for (int i = 1; i < movement+1; i++) {
-                test = new_Block_Check(P1_X,P1_Y-i);
+                 if (new_Block_Check(P1_X, P1_Y - i) == false){crossMvtAnswer = false;}
+                    System.out.println("after cross_Mvt_Check loop 1: crossMvtAnswer: "+crossMvtAnswer);
                 }
-                System.out.println("after cross_Mvt_Check loop 1:-expect: pass test: "+test);
+
                 }else{
                 for (int i = 1; i < movement+1; i++) {
-                    test = new_Block_Check(P1_X,P1_Y+i);
+                    if (new_Block_Check(P1_X,P1_Y+i) == false){crossMvtAnswer = false;}
+                    System.out.println("after cross_Mvt_Check loop 2: crossMvtAnswer: "+crossMvtAnswer);
                     }
-                    System.out.println("after cross_Mvt_Check loop 2:-expect: pass test: "+test);
                 }
 
         }else if( P1_Y == P2_Y){
             int movement = Math.abs(P1_X-P2_X);// counter for loop
             if ((P1_X-P2_X)>=1){//postive or neg version
                 for (int i = 1; i < movement+1; i++) {
-                    test = new_Block_Check(P1_X-i,P1_Y);
+                    if (new_Block_Check(P1_X-i,P1_Y) == false){crossMvtAnswer = false;}
+                    System.out.println("after cross_Mvt_Check loop 3: crossMvtAnswer: "+crossMvtAnswer);
+
                 }
-                System.out.println("after cross_Mvt_Check loop 3:-expect: pass test: "+test);
             }else{
                 for (int i = 1; i < movement+1; i++) {
-                    test = new_Block_Check(P1_X+i,P1_Y);
+                    if (new_Block_Check(P1_X+i,P1_Y) == false){crossMvtAnswer = false;}
+                    System.out.println("after cross_Mvt_Check loop 4: crossMvtAnswer: "+crossMvtAnswer);
                 }
-                System.out.println("after cross_Mvt_Check loop 4:-expect: pass test: "+test);
             }
-        }else{System.out.println("invalid move"); System.out.println("after cross_Mvt_Check all loops:-expect: fail test: "+test);}
-        return test;
+        }else{
+            System.out.println("invalid move");
+            crossMvtAnswer = false;
+            System.out.println("after cross_Mvt_Check all loops,expect: fail test: "+crossMvtAnswer);
+        }
+        System.out.println("after cross_Mvt_Check: "+crossMvtAnswer);
+        return crossMvtAnswer;
         // will add castling stuff here later
     }
 
-    public static void diag_Mvt_Check(int Piece01_X,int Piece01_Y,int Piece02_X,int Piece02_Y)  {
+    public static boolean diag_Mvt_Check(int Piece01_X,int Piece01_Y,int Piece02_X,int Piece02_Y)  {
         int P1_X=Piece01_X+1;int P1_Y= Piece01_Y+1;int P2_X=Piece02_X+1;int P2_Y= Piece02_Y+1;
-
+        Boolean diagMvtAnswer = true;
         if ((P1_X < P2_X && P1_Y < P2_Y) || (P1_X > P2_X && P1_Y > P2_Y)  ){// down LR  if true ----->else up LR
             if ((P1_X < P2_X && P1_Y < P2_Y)){//down LR  postive only
-
                 int movement1 = Math.abs(P1_X-P2_X);
-                if ((P1_X-P2_X)>=1){//postive version
+                //if ((P1_X-P2_X)>=1){//<---- (i think we can do without this if , but need to check.)
                     for (int i = 1; i < movement1+1; i++) {
-                    new_Block_Check(P1_X+i,P1_Y+i);
+                        if (new_Block_Check(P1_X+i,P1_Y+i) == false){diagMvtAnswer = false;}
+                        System.out.println("after diag_Mvt_Check loop 1: diagMvtAnswer: "+diagMvtAnswer);
                     }
-                }
+
             }else if ((P1_X > P2_X && P1_Y > P2_Y)  ){//down LR  negative only
                 int movement1 = Math.abs(P1_X-P2_X);
-                if ((P1_X-P2_X)>=1){//postive or neg version
+               // if ((P1_X-P2_X)>=1){//<---- (i think we can do without this if , but need to check.) //postive or neg version
                     for (int i = 1; i < movement1+1; i++) {
-                        new_Block_Check(P1_X-i,P1_Y-i);
+                        if (new_Block_Check(P1_X-i,P1_Y-i) == false){diagMvtAnswer = false;}
+                        System.out.println("after diag_Mvt_Check loop 2: diagMvtAnswer: "+diagMvtAnswer);
+
                     }
-                }
+
             }
-        }else if((P1_X > P2_X && P1_Y < P2_Y) || (P1_X > P2_X && P1_Y < P2_Y)){//else up LR
-            if ((P1_X > P2_X && P1_Y < P2_Y)){//else up LR postive X only
+            //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+        }else if((P1_X < P2_X && P1_Y > P2_Y) || (P1_X > P2_X && P1_Y < P2_Y)){//else up LR
+            if ((P1_X < P2_X && P1_Y > P2_Y)){//else up LR postive X only
                 int movement1 = Math.abs(P1_X-P2_X);
-                if ((P1_X-P2_X)>=1){//postive version
+                //if ((P1_X-P2_X)>=1){//<---- (i think we can do without this if , but need to check.) postive version
                     for (int i = 1; i < movement1+1; i++) {
-                        new_Block_Check(P1_X+i,P1_Y-i);
+                        if (new_Block_Check(P1_X+i,P1_Y-i) == false){diagMvtAnswer = false;}
+                        System.out.println("after diag_Mvt_Check loop 3: diagMvtAnswer: "+diagMvtAnswer);
+
                     }
-                }
+
             }else if ((P1_X > P2_X && P1_Y < P2_Y)){//else up LR negative X only
                 int movement1 = Math.abs(P1_X-P2_X);
-                if ((P1_X-P2_X)>=1){//neg version
+                //if ((P1_X-P2_X)>=1){//<---- (i think we can do without this if , but need to check.)neg version
                     for (int i = 1; i < movement1+1; i++) {
-                        new_Block_Check(P1_X-i,P1_Y+i);
+                        if (new_Block_Check(P1_X-i,P1_Y+i) == false){diagMvtAnswer = false;}
+                        System.out.println("after diag_Mvt_Check loop 4: diagMvtAnswer: "+diagMvtAnswer);
+
                     }
-                }
+
             }
 
+        }else{
+            System.out.println("invalid move");
+            diagMvtAnswer = false;
+            System.out.println("after diag_Mvt_Check all loops,expect: fail test: "+diagMvtAnswer);
         }
+        System.out.println("after diag_Mvt_Check: "+diagMvtAnswer);
+        return diagMvtAnswer;
     }
 
 }
