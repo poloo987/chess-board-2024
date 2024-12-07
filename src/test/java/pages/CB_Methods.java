@@ -3,6 +3,7 @@ package pages;
 import java.util.Scanner;
 
 import static pages.CB_GameBoard.*;
+import static pages.CB_Save_Methods.boardUpdate;
 
 public class CB_Methods {
 
@@ -14,6 +15,8 @@ public class CB_Methods {
     // +++++++++++++ variables for Chessboard_page ++++++++++++++++++++
     protected static String PieceMain_01 ;
     protected static String PieceMain_02;
+    protected static String voidPiece_01 ;
+    protected static String voidPiece_02;
 
     protected static String Test;
 
@@ -52,9 +55,9 @@ public class CB_Methods {
                             answer.charAt(0) == 'H'
                     )
                     && (part >0 && part<=8 )
-            ) {  test= false;}
-
-            else{
+            ){
+                test= false;
+            }else{
                 System.out.println("coordinate error! Try again ,input coordinate (A-H,1-8) ex:A2");
                 answer = User_answer.nextLine();
             }
@@ -99,7 +102,14 @@ public class CB_Methods {
         return Coord_X;
     }
 
-
+    public static Boolean check_Team(String PT) {
+        boolean checker = true;
+        String grabLLP1= Character.toString(PieceMain_01.charAt(PieceMain_01.length()-2));
+        if (!grabLLP1.equals(PT)){
+            checker = false;
+        }
+        return checker ;
+    }
 
     public static boolean check_movement() {
         System.out.println("checking movement");
@@ -108,22 +118,42 @@ public class CB_Methods {
 
 
         switch (PieceMain_01) {
-            case "Pawn":
+            case "|-Pawn--W|":
                 getPawn.pawn_Activate();
                 break;
-            case "Rook": //tested -passed 11/27
+            case "|--Rook-W|": //tested -passed 11/27
                 checker= getRook.rook_Activate();
                 break;
-            case "Knight"://tested -passed 11/27
-                getKnight.knight_Activate();
+            case "|Knight-W|"://tested -passed 11/27
+                checker =getKnight.knight_Activate();
                 break;
-            case "Bishop"://tested -passed 11/29
+            case "|Bishop-W|"://tested -passed 11/29
                 checker = getBishop.bishop_Activate();
                 break;
-            case "Queen"://tested -passed 12/3
+            case "|-Queen-W|"://tested -passed 12/3
                 checker = getQueen.queen_Activate();
                 break;
-            case "King"://tested -passed 12/3
+            case "|--King-W|"://tested -passed 12/3
+                checker =getKing.king_Activate();
+                break;
+
+
+            case "|-Pawn--B|":
+                getPawn.pawn_Activate();
+                break;
+            case "|--Rook-B|": //tested -passed 11/27
+                checker= getRook.rook_Activate();
+                break;
+            case "|Knight-B|"://tested -passed 11/27
+                checker =getKnight.knight_Activate();
+                break;
+            case "|Bishop-B|"://tested -passed 11/29
+                checker = getBishop.bishop_Activate();
+                break;
+            case "|-Queen-B|"://tested -passed 12/3
+                checker = getQueen.queen_Activate();
+                break;
+            case "|--King-B|"://tested -passed 12/3
                 checker =getKing.king_Activate();
                 break;
 
@@ -132,22 +162,32 @@ public class CB_Methods {
     }
 
 
+    public static void player_movement() {
+
+        voidPiece_01=PieceMain_01;
+        Chessborad [Piece01_Y][Piece01_X]="|*--00--*|";
+        Chessborad [Piece02_Y][Piece02_X]=voidPiece_01;
+        PieceMain_01 =null;
+        PieceMain_02 =null;
+
+        boardUpdate();
+
+    }
 
 
 
-
-    public static boolean run_Block_Check() {
-        if (PieceMain_02.equals("-000-")){
+   /* public static boolean run_Block_Check() {
+        if (PieceMain_02.equals("|*--00--*|")){
             System.out.println("passed run_Block_Check");
             return true;
         }else{
             System.out.println("failed run_Block_Check");
         }
         return false;
-    }
+    }*/
     public static boolean new_Block_Check(int x,int y) { //tested -passed 11/27
         Test =Chessborad [y-1][x-1];// -1 to turn back java cord
-        if (Test.equals("-000-")){
+        if (Test.equals("|*--00--*|")){
             System.out.println("passed run_Block_Check");
             return true;
         }else{
@@ -161,31 +201,64 @@ public class CB_Methods {
         int P1_X=Piece01_X+1;int P1_Y= Piece01_Y+1;int P2_X=Piece02_X+1;int P2_Y= Piece02_Y+1;
         if (P1_X == P2_X  ){                    // check for up or down movement
             int movement = Math.abs(P1_Y-P2_Y);// counter for loop
-            if ((P1_Y-P2_Y)>=1){//postive or neg version
-                for (int i = 1; i < movement+1; i++) {
-                 if (new_Block_Check(P1_X, P1_Y - i) == false){crossMvtAnswer = false;}
-                    System.out.println("after cross_Mvt_Check loop 1: crossMvtAnswer: "+crossMvtAnswer);
-                }
-
+            if(movement== 1){
+                crossMvtAnswer =last_Space_Check( P2_X,P2_Y,P1_X);
+            }else{
+                if ((P1_Y-P2_Y)>=1){//postive or neg version
+                    for (int i = 1; i < movement; i++) {
+                        if (new_Block_Check(P1_X, P1_Y - i) == false){
+                            crossMvtAnswer = false;
+                        }
+                        System.out.println("after cross_Mvt_Check loop 1: crossMvtAnswer: "+crossMvtAnswer);
+                    }
+                    if (crossMvtAnswer.equals(last_Space_Check( P2_X,P2_Y,P1_X) && last_Space_Check( P2_X,P2_Y,P1_X)==true)){
+                        crossMvtAnswer = true ;
+                    }else {
+                        crossMvtAnswer = false ;
+                    }
                 }else{
-                for (int i = 1; i < movement+1; i++) {
-                    if (new_Block_Check(P1_X,P1_Y+i) == false){crossMvtAnswer = false;}
-                    System.out.println("after cross_Mvt_Check loop 2: crossMvtAnswer: "+crossMvtAnswer);
+                    for (int i = 1; i < movement; i++) {
+                        if (new_Block_Check(P1_X,P1_Y+i) == false){crossMvtAnswer = false;}
+                            System.out.println("after cross_Mvt_Check loop 2: crossMvtAnswer: "+crossMvtAnswer);
+                    }
+                    if (crossMvtAnswer.equals(last_Space_Check( P2_X,P2_Y,P1_X) && last_Space_Check( P2_X,P2_Y,P1_X)==true)){
+                        crossMvtAnswer = true ;
+                    }else {
+                        crossMvtAnswer = false ;
                     }
                 }
-
+            }
         }else if( P1_Y == P2_Y){
             int movement = Math.abs(P1_X-P2_X);// counter for loop
-            if ((P1_X-P2_X)>=1){//postive or neg version
-                for (int i = 1; i < movement+1; i++) {
-                    if (new_Block_Check(P1_X-i,P1_Y) == false){crossMvtAnswer = false;}
-                    System.out.println("after cross_Mvt_Check loop 3: crossMvtAnswer: "+crossMvtAnswer);
-
-                }
+            if(movement== 1){
+                crossMvtAnswer =last_Space_Check( P2_X,P2_Y,P1_X);
             }else{
-                for (int i = 1; i < movement+1; i++) {
-                    if (new_Block_Check(P1_X+i,P1_Y) == false){crossMvtAnswer = false;}
-                    System.out.println("after cross_Mvt_Check loop 4: crossMvtAnswer: "+crossMvtAnswer);
+                if ((P1_X - P2_X) >= 1) {//postive or neg version
+                    for (int i = 1; i < movement; i++) {
+                        if (new_Block_Check(P1_X - i, P1_Y) == false) {
+                            crossMvtAnswer = false;
+                        }
+                        System.out.println("after cross_Mvt_Check loop 3: crossMvtAnswer: " + crossMvtAnswer);
+
+                    }
+                    if (crossMvtAnswer.equals(last_Space_Check( P2_X,P2_Y,P1_X) && last_Space_Check( P2_X,P2_Y,P1_X)==true)){
+                        crossMvtAnswer = true ;
+                    }else {
+                        crossMvtAnswer = false ;
+                    }
+
+                } else {
+                    for (int i = 1; i < movement; i++) {
+                        if (new_Block_Check(P1_X + i, P1_Y) == false) {
+                            crossMvtAnswer = false;
+                        }
+                        System.out.println("after cross_Mvt_Check loop 4: crossMvtAnswer: " + crossMvtAnswer);
+                    }
+                    if (crossMvtAnswer.equals(last_Space_Check( P2_X,P2_Y,P1_X) && last_Space_Check( P2_X,P2_Y,P1_X)==true)){
+                        crossMvtAnswer = true ;
+                    }else {
+                        crossMvtAnswer = false ;
+                    }
                 }
             }
         }else{
@@ -202,46 +275,65 @@ public class CB_Methods {
         int P1_X=Piece01_X+1;int P1_Y= Piece01_Y+1;int P2_X=Piece02_X+1;int P2_Y= Piece02_Y+1;
         Boolean diagMvtAnswer = true;
         if ((P1_X < P2_X && P1_Y < P2_Y) || (P1_X > P2_X && P1_Y > P2_Y)  ){// down LR  if true ----->else up LR
+            int movement = Math.abs(P1_X-P2_X);
+            if(movement== 1){
+                diagMvtAnswer =last_Space_Check( P2_X,P2_Y,P1_X);
+            }else{
             if ((P1_X < P2_X && P1_Y < P2_Y)){//down LR  postive only
-                int movement1 = Math.abs(P1_X-P2_X);
                 //if ((P1_X-P2_X)>=1){//<---- (i think we can do without this if , but need to check.)
-                    for (int i = 1; i < movement1+1; i++) {
+                    for (int i = 1; i < movement; i++) {
                         if (new_Block_Check(P1_X+i,P1_Y+i) == false){diagMvtAnswer = false;}
                         System.out.println("after diag_Mvt_Check loop 1: diagMvtAnswer: "+diagMvtAnswer);
                     }
-
+                if (diagMvtAnswer.equals(last_Space_Check( P2_X,P2_Y,P1_X) && last_Space_Check( P2_X,P2_Y,P1_X)==true)){
+                    diagMvtAnswer = true ;
+                }else {
+                    diagMvtAnswer = false ;
+                }
             }else if ((P1_X > P2_X && P1_Y > P2_Y)  ){//down LR  negative only
-                int movement1 = Math.abs(P1_X-P2_X);
-               // if ((P1_X-P2_X)>=1){//<---- (i think we can do without this if , but need to check.) //postive or neg version
-                    for (int i = 1; i < movement1+1; i++) {
+
+                //postive or neg version
+                    for (int i = 1; i < movement; i++) {
                         if (new_Block_Check(P1_X-i,P1_Y-i) == false){diagMvtAnswer = false;}
                         System.out.println("after diag_Mvt_Check loop 2: diagMvtAnswer: "+diagMvtAnswer);
-
                     }
-
+                if (diagMvtAnswer.equals(last_Space_Check( P2_X,P2_Y,P1_X) && last_Space_Check( P2_X,P2_Y,P1_X)==true)){
+                    diagMvtAnswer = true ;
+                }else {
+                    diagMvtAnswer = false ;
+                }
             }
-            //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+            } //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
         }else if((P1_X < P2_X && P1_Y > P2_Y) || (P1_X > P2_X && P1_Y < P2_Y)){//else up LR
+            int movement = Math.abs(P1_X-P2_X);
+            if(movement== 1){
+                diagMvtAnswer =last_Space_Check( P2_X,P2_Y,P1_X);
+            }else{
             if ((P1_X < P2_X && P1_Y > P2_Y)){//else up LR postive X only
-                int movement1 = Math.abs(P1_X-P2_X);
-                //if ((P1_X-P2_X)>=1){//<---- (i think we can do without this if , but need to check.) postive version
-                    for (int i = 1; i < movement1+1; i++) {
+
+                // postive version
+                    for (int i = 1; i < movement; i++) {
                         if (new_Block_Check(P1_X+i,P1_Y-i) == false){diagMvtAnswer = false;}
                         System.out.println("after diag_Mvt_Check loop 3: diagMvtAnswer: "+diagMvtAnswer);
-
                     }
+                if (diagMvtAnswer.equals(last_Space_Check( P2_X,P2_Y,P1_X) && last_Space_Check( P2_X,P2_Y,P1_X)==true)){ // need to run twice but i don't want it to output two times
+                    diagMvtAnswer = true ;
+                }else {
+                    diagMvtAnswer = false ;
+                }
 
             }else if ((P1_X > P2_X && P1_Y < P2_Y)){//else up LR negative X only
-                int movement1 = Math.abs(P1_X-P2_X);
-                //if ((P1_X-P2_X)>=1){//<---- (i think we can do without this if , but need to check.)neg version
-                    for (int i = 1; i < movement1+1; i++) {
+                    for (int i = 1; i < movement; i++) {
                         if (new_Block_Check(P1_X-i,P1_Y+i) == false){diagMvtAnswer = false;}
                         System.out.println("after diag_Mvt_Check loop 4: diagMvtAnswer: "+diagMvtAnswer);
-
                     }
-
+                if (diagMvtAnswer.equals(last_Space_Check( P2_X,P2_Y,P1_X) && last_Space_Check( P2_X,P2_Y,P1_X)==true)){
+                    diagMvtAnswer = true ;
+                }else {
+                    diagMvtAnswer = false ;
+                }
             }
-
+            }
         }else{
             System.out.println("invalid move");
             diagMvtAnswer = false;
@@ -251,4 +343,42 @@ public class CB_Methods {
         return diagMvtAnswer;
     }
 
+    public static boolean last_Space_Check(int P2_X,int P2_Y,int P1_X){
+        Boolean LSCAnswer = true;
+        System.out.println("checking final space");
+        if (!(new_Block_Check(P2_X,P2_Y))){
+            System.out.println("ignore last output ");
+            if (attack_Check(P2_X,P2_Y,P1_X)){
+                System.out.println("passed attack check");
+            }else {LSCAnswer = false;}
+        }
+        return LSCAnswer;
+    }
+    public static boolean attack_Check(int P2_X,int P2_Y,int P1_X) {
+        Boolean ACAnswer = true;
+        String grabLLP1= Character.toString(PieceMain_01.charAt(PieceMain_01.length()-2));
+        String grabLLP2=Character.toString(PieceMain_02.charAt(PieceMain_02.length()-2));
+
+        if(PieceMain_01.contains("Pawn")){
+            if((!grabLLP1.equals(grabLLP2))){
+                if(((P2_X==P1_X-1 )||(P2_X==P1_X+1))){
+                    if (PieceMain_02.contains("King")){ // need testing
+                        ACAnswer = false;
+                        System.out.println("no attacking kings ");
+                    }
+                }else{ACAnswer = false;System.out.println("invalid move- pawn - out of pawn's range ");}
+            }else{ACAnswer = false;System.out.println("no friendly fire");}
+        }else{
+            if((!grabLLP1.equals(grabLLP2))){
+                if (PieceMain_02.contains("King")){ // need testing
+                    ACAnswer = false;System.out.println("no attacking kings ");
+                }
+            }else{
+                ACAnswer = false;System.out.println("no friendly fire");
+            }
+        }
+
+        return ACAnswer;
+    }
 }
+

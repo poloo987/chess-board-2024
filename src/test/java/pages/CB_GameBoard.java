@@ -6,6 +6,9 @@ import java.io.FileNotFoundException;
 import java.io.PrintWriter;
 import java.util.Scanner;
 
+import static pages.CB_Save_Methods.boardUpdate;
+import static pages.CB_Save_Methods.run_SaveFile;
+
 public class CB_GameBoard extends CB_Methods {
 
     /* */
@@ -15,68 +18,45 @@ public class CB_GameBoard extends CB_Methods {
     static CB_Bishop_Methods getBishop = new CB_Bishop_Methods();
     static CB_Queen_Methods getQueen = new CB_Queen_Methods();
     static CB_King_Methods getKing = new CB_King_Methods();
-    //static String[][] Chessborad = new String[8][8];/**/
     static String [][] Chessborad = {
-               /* A */ /* B */   /* C */   /* D */  /* E */ /* F */   /* G */   /* H */
-     /* 1 */  {"Rook", "Knight", "Bishop", "Queen", "King", "Bishop", "Knight",  "Rook"},
-     /* 2 */  {"Pawn", "Pawn",   "Pawn",   "Pawn",  "Pawn", "Pawn",   "Pawn",    "Pawn"},
-     /* 3 */  {"-000-","-000-",  "-000-",  "-000-", "-000-","-000-",  "-000-",  "-000-"},
-     /* 4 */  {"-000-","-000-",  "-000-",  "-000-", "-000-","-000-",  "-000-",  "-000-"},
-     /* 5 */  {"-000-","-000-",  "-000-",  "-000-",  "-000-","-000-",  "-000-",  "-000-"},
-     /* 6 */  {"-000-","-000-",  "-000-",  "-000-", "-000-","-000-",  "-000-",  "-000-"},
-     /* 7 */  {"Pawn", "Pawn",   "Pawn",   "Pawn",  "Pawn", "Pawn",   "Pawn",    "Pawn"},
-     /* 8 */  {"Rook", "Knight", "Bishop", "Queen", "King", "Bishop", "Knight",  "Rook"}
+
+    //                |*---A---|   |---B---*|   |*---C---|   |---D---*|   |*---E---|   |---F---*|   |*---G---|   |---H---*|
+    /*|*---1---|*/  {"|--Rook-W|","|Knight-W|","|Bishop-W|","|-Queen-W|","|--King-W|","|Bishop-W|","|Knight-W|","|--Rook-W|"},
+    /*|*---2---|*/  {"|-Pawn--W|","|-Pawn--W|","|-Pawn--W|","|-Pawn--W|","|-Pawn--W|","|-Pawn--W|","|-Pawn--W|","|-Pawn--W|"},
+    /*|*---3---|*/  {"|*--00--*|","|*--00--*|","|*--00--*|","|*--00--*|","|*--00--*|","|*--00--*|","|*--00--*|","|*--00--*|"},
+    /*|*---4---|*/  {"|*--00--*|","|*--00--*|","|*--00--*|","|*--00--*|","|Bishop-B|","|*--00--*|","|*--00--*|","|*--00--*|"},
+    /*|*---5---|*/  {"|*--00--*|","|--Rook-B|","|*--00--*|","|--King-W|","|*--00--*|","|*--00--*|","|*--00--*|","|*--00--*|"},
+    /*|*---6---|*/  {"|*--00--*|","|*--00--*|","|*--00--*|","|*--00--*|","|*--00--*|","|*--00--*|","|*--00--*|","|*--00--*|"},
+    /*|*---7---|*/  {"|-Pawn--B|","|-Pawn--B|","|-Pawn--B|","|-Pawn--B|","|-Pawn--B|","|-Pawn--B|","|-Pawn--B|","|-Pawn--B|"},
+    /*|*---8---|*/  {"|--Rook-B|","|Knight-B|","|Bishop-B|","|-Queen-B|","|--King-B|","|Bishop-B|","|Knight-B|","|--Rook-B|"},
         };
-    public static void run_SaveFile() throws FileNotFoundException {
-        int SF_Answer1= 1; int SF_Answer2= 1; String date = "00-00-000";String pizza= "00-00-000";String fileName = "C:\\Users\\franc\\IdeaProjects\\chess-board-2024\\CB_game_save_00-00-000_file.txt";
-        File loadedFile = new File(fileName);//"CB_game_save_"+date+"_file.txt"//may need to add player turn and time
-        //PrintWriter SFPrinter = new PrintWriter(loadedFile);
 
-        SF_Answer1=JOptionPane.showConfirmDialog(null, "do you want to load a saved game file? or start a new game?");
-        switch (SF_Answer1){
-            case 0://yes
-               do{
-                   try{
-                        //take file from user
-                        fileName = JOptionPane.showInputDialog(null, "Enter the .txt. file name, example: CB_game_save_00-00-000_file.txt");
-                   }catch (Exception e){
-                        System.out.println("------ File Error ----------");
-                        SF_Answer2=JOptionPane.showConfirmDialog(null, "do you want to try again ? or start a new game?");
-                        if(SF_Answer2==1){
-                            fileName = "CB_game_save_00-00-000_file.txt";}
-                   }//end of catch
-               }while (SF_Answer2 ==0);
-            break;
+    public static void gameSetup() throws FileNotFoundException {
+        run_SaveFile();
+        boardUpdate();
 
-            case 1://no
-                System.out.println("starting a new game");
-                fileName = "CB_game_save_00-00-000_file.txt";
-            break;
-        }
-        Scanner SF_Scan = new Scanner(loadedFile);
-        for (int y = 0; y < Chessborad.length; y++) {
-            for (int x = 0; x < Chessborad[y].length; x++) {
-                if(SF_Scan.hasNext()) {
-                    Chessborad[y][x] =SF_Scan.nextLine();
-
-                }else {
-                    System.out.println("no more line");
-                    System.out.println("the x: "+x);
-                    System.out.println("the y: "+y);
-                }
-            }
-        }
     }
 
-    public static void select_Piece()  {
-    boolean test_CBgb = true;
+    public static void rungame()  {
+        boolean runAnswer = true;
+        String PT = "W";
 
-        for (int y = 0; y < Chessborad.length; y++) {
-            for (int x = 0; x < Chessborad[y].length; x++) {
-                System.out.print(Chessborad[y][x] + " ");
-            }
-            System.out.println(); // New line after each row
-        }
+        System.out.println("let the game begin !");
+        System.out.println("white team will go first -player");
+        do {
+            System.out.println("to end the game type:  ");
+            answer = User_answer.nextLine();
+            if(answer.equals("Quit")){runAnswer = false;}
+            System.out.println("type w or B ");
+            PT = User_answer.nextLine();
+            select_Piece(PT);
+
+    } while (!runAnswer);
+
+    }
+    public static void select_Piece(String PT)  {
+    boolean test_CBgb = true;
+        do {
         System.out.println("what piece do you want to move? input coordinate (A-H,1-8) ex:A2");
         answer = User_answer.nextLine();
         answer = getAnswerCheck(answer);
@@ -84,7 +64,9 @@ public class CB_GameBoard extends CB_Methods {
         Piece01_X = getCoord_X();//A
         Piece01_Y = getCoord_Y();//2
         PieceMain_01 = Chessborad [Piece01_Y][Piece01_X];
-        //check_Team(); makes sure that PieceMain_01 in yours
+        check_Team(PT);
+        } while (!test_CBgb);
+        test_CBgb = true;
         do {
         System.out.println("where do want to move it? ?");
         answer = User_answer.nextLine();
@@ -95,6 +77,7 @@ public class CB_GameBoard extends CB_Methods {
         test_CBgb = check_movement();
         // can add player quit choice later
         } while (!test_CBgb);//tested -passed 11/27
+        player_movement();
 
         System.out.println("end");// don't for get to close your image so the program closes
     }
