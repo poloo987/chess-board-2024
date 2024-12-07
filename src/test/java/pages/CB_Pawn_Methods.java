@@ -19,52 +19,33 @@ public class CB_Pawn_Methods extends CB_Methods {
     public static void pawn_Activate() { // might need to add a OR  to include the rush check () // && these are called operators right
 
         // code for passive pawn move  ============================================================================
-          if (Piece01_X == Piece02_X && Piece02_Y == Piece01_Y +1){
-              run_Block_Check();
-              run_Queen_Check();
+        String grabLLP1= Character.toString(PieceMain_01.charAt(PieceMain_01.length()-2));
+        if(grabLLP1.equals("W")){
+            if (Piece01_X == Piece02_X && Piece02_Y == Piece01_Y +1){
+                last_Space_Check(Piece02_X, Piece02_Y,Piece01_X);
 
 
-          } else if (Piece01_X == Piece02_X && Piece02_Y == Piece01_Y +2){
-              run_Rush_Check();
+            } else if (Piece01_X == Piece02_X && Piece02_Y == Piece01_Y +2){
+                last_Space_Check(Piece02_X, Piece02_Y,Piece01_X);
+                //run_Rush_Check();
 
             }else { System.out.println("invalid move "); }
 
-          // need to find a way to separate this code to work indepent of the checks above @@@@@@@
-        /*
-        if (run_Block_Check()==true) {
-            //System.out.println(" move pawn ");
-            if (run_Queen_Check()==true && run_Block_Check()==true) {
-                System.out.println(" turn pawn into queen ");
-            }
+        }else if (grabLLP1.equals("B")){
+            if (Piece01_X == Piece02_X && Piece02_Y == Piece01_Y -1){
+                last_Space_Check(Piece02_X, Piece02_Y,Piece01_X);
+                //run_Queen_Check();
+
+
+            } else if (Piece01_X == Piece02_X && Piece02_Y == Piece01_Y -2){
+                last_Space_Check(Piece02_X, Piece02_Y,Piece01_X);
+                //run_Rush_Check();
+
+            }else { System.out.println("invalid move "); }
         }
-        else {
-            System.out.println("don't move pawn ");
-        }
-
-         */
-        //@@@@@@@@@@@@@@@@@@@@
-
-    // END code for passive pawn move  ============================================================================
-    //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-    // code for aggressive pawn move  ============================================================================
-        /*
-        if (Piece02_X == Piece01_X-1 && Piece02_Y == Piece01_Y +1){
-            run_Block_Check(); // need the false
-            run_Queen_Check();
-
-        }
-*/
-
-
     }
-
-
-
-
-
-
-    public static void run_Rush_Check() {
-        if ((run_Block_Check()==true)&&(Piece01_X == 2 ||Piece01_X == 7)) {
+    public static void run_Rush_Check(int P2_X,int P2_Y) {
+        if ((new_Block_Check(P2_X,P2_Y)==true)&&(Piece01_X == 2 ||Piece01_X == 7)) {
             System.out.println("passed run_Rush_Check");
             System.out.println(" move pawn ");
         } else {
