@@ -15,12 +15,15 @@ public class chessBoard_Runner_V03 {
         CB_GameBoard getCB_GameBoard = new CB_GameBoard();
         CB_Save_Methods getCB_SaveMethods = new CB_Save_Methods();
         System.out.println("welcome to the wolf's chess game ");
+        System.out.println(" game mode: CO-OP  ");
+        getCB_GameBoard.gameSetup();
+        getCB_GameBoard.rungame();
 
-        System.out.println("pick your game mode  ");
-        System.out.println("1 = chess match PvP ");
+       // System.out.println("pick your game mode  ");
+       // System.out.println("1 = chess match PvP ");
         //getCB_SaveMethods.run_SaveFile();
-        //getCB_GameBoard.gameSetup();
-        getCB_GameBoard.select_Piece("white");
+
+        //getCB_GameBoard.select_Piece("white");
 
         //System.out.println("2 = tutorial - comming soon  ");
         //answer = User_answer.nextLine();
