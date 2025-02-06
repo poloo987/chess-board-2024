@@ -4,7 +4,7 @@ public class array {
     public static void main(String[] args){
         int index = 0;
         String[] [] Chessborad = {
-                {"enero", "febreo", ",marzop", "abril", "mayo", "junio", "juilo", "agusto", "setempre","novembre","dec"}
+                {"enero", "febrero", ",marzo", "abril", "mayo", "junio", "julio", "agosto", "septiembre","noviembre","diciembre"}
         };
 
 
