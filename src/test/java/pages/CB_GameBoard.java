@@ -2,7 +2,7 @@ package pages;
 
 import java.io.FileNotFoundException;
 
-import static pages.CB_Save_Methods.*;
+import static pages.CB_SaveFile_Methods.*;
 
 public class CB_GameBoard extends CB_Methods {
 
@@ -27,26 +27,35 @@ public class CB_GameBoard extends CB_Methods {
         };
 
     public static void gameSetup() throws FileNotFoundException {
+
         run_SaveFile();
         boardUpdate();
 
     }
 
     public static void rungame() throws FileNotFoundException {
-        boolean runAnswer = true;
+        boolean loopOn = true;
         String PT = "W";int PTCount = 1;
 
         System.out.println("let the game begin !");
-        System.out.println("white team will go first -player");
+        showGameTime();
+        System.out.println("white team will go first ");
         do {
+
+            switch (PT){
+                case"W":
+                    System.out.println("white's turn");
+                    break;
+                case"B":
+                    System.out.println("black's turn");
+                    break;
+            }
             System.out.println(" press any key to Start the turn or  type: Quit  ");
             answer = User_answer.nextLine();
-            if(answer.equals("Quit")){runAnswer = false; makeNewFile();System.exit(0);}
+            if(answer.equalsIgnoreCase("Quit")){loopOn = false ; showGameTime(); makeNewFile();System.exit(0);}
             select_Piece(PT);
             if (PTCount==1){PTCount=2;PT = "B";}else{PTCount=1;PT = "W";}
-
-
-    } while (runAnswer);
+    } while (loopOn);
 
     }
     public static void select_Piece(String PT)  {

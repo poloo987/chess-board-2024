@@ -4,7 +4,7 @@ import javax.swing.*;
 import java.util.Scanner;
 
 import static pages.CB_GameBoard.*;
-import static pages.CB_Save_Methods.boardUpdate;
+import static pages.CB_SaveFile_Methods.boardUpdate;
 
 public class CB_Methods {
 
