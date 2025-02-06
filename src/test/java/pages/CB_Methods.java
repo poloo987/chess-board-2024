@@ -1,9 +1,10 @@
 package pages;
 
+import javax.swing.*;
 import java.util.Scanner;
 
 import static pages.CB_GameBoard.*;
-import static pages.CB_Save_Methods.boardUpdate;
+import static pages.CB_SaveFile_Methods.boardUpdate;
 
 public class CB_Methods {
 
@@ -102,11 +103,15 @@ public class CB_Methods {
         return Coord_X;
     }
 
-    public static Boolean check_Team(String PT) {
+    public static Boolean check_color(String PT) {
         boolean checker = true;
-        String grabLLP1= Character.toString(PieceMain_01.charAt(PieceMain_01.length()-2));
-        if (!grabLLP1.equals(PT)){
-            checker = false;
+        System.out.println("checking color");
+        if(!(PieceMain_02.equals("|*--00--*|"))){
+            String grabLLP1= Character.toString(PieceMain_01.charAt(PieceMain_01.length()-2));
+            if (!grabLLP1.equals(PT)){
+                checker = false;
+                System.out.println("that piece in not from your color");
+            }
         }
         return checker ;
     }
@@ -119,7 +124,7 @@ public class CB_Methods {
 
         switch (PieceMain_01) {
             case "|-Pawn--W|":
-                getPawn.pawn_Activate();
+                checker= getPawn.pawn_Activate();
                 break;
             case "|--Rook-W|": //tested -passed 11/27
                 checker= getRook.rook_Activate();
@@ -137,9 +142,24 @@ public class CB_Methods {
                 checker =getKing.king_Activate();
                 break;
 
+            case "|*--00--*|"://tested -passed 12/3
+                if (PieceMain_01.contains("King")){
+                    int CB_M_CM_Answer=0;
+                    CB_M_CM_Answer= JOptionPane.showConfirmDialog(null, "do you want to load a saved game file? or start a new game?");
+                    switch (CB_M_CM_Answer) {
+                        case 0://yes
+                            checker = false;
+                            break;
+                        case 1://no
+                            checker = true;
+                            break;
+                    }
+                }else {checker =true;}
+                break;
+
 
             case "|-Pawn--B|":
-                getPawn.pawn_Activate();
+                checker= getPawn.pawn_Activate();
                 break;
             case "|--Rook-B|": //tested -passed 11/27
                 checker= getRook.rook_Activate();
@@ -176,16 +196,8 @@ public class CB_Methods {
 
 
 
-   /* public static boolean run_Block_Check() {
-        if (PieceMain_02.equals("|*--00--*|")){
-            System.out.println("passed run_Block_Check");
-            return true;
-        }else{
-            System.out.println("failed run_Block_Check");
-        }
-        return false;
-    }*/
-    public static boolean new_Block_Check(int x,int y) { //tested -passed 11/27
+
+    public static boolean run_Block_Check(int x, int y) { //tested -passed 11/27
         Test =Chessborad [y-1][x-1];// -1 to turn back java cord
         if (Test.equals("|*--00--*|")){
             System.out.println("passed run_Block_Check");
@@ -206,7 +218,7 @@ public class CB_Methods {
             }else{
                 if ((P1_Y-P2_Y)>=1){//postive or neg version
                     for (int i = 1; i < movement; i++) {
-                        if (new_Block_Check(P1_X, P1_Y - i) == false){
+                        if (run_Block_Check(P1_X, P1_Y - i) == false){
                             crossMvtAnswer = false;
                         }
                         System.out.println("after cross_Mvt_Check loop 1: crossMvtAnswer: "+crossMvtAnswer);
@@ -218,7 +230,7 @@ public class CB_Methods {
                     }
                 }else{
                     for (int i = 1; i < movement; i++) {
-                        if (new_Block_Check(P1_X,P1_Y+i) == false){crossMvtAnswer = false;}
+                        if (run_Block_Check(P1_X,P1_Y+i) == false){crossMvtAnswer = false;}
                             System.out.println("after cross_Mvt_Check loop 2: crossMvtAnswer: "+crossMvtAnswer);
                     }
                     if (crossMvtAnswer.equals(last_Space_Check( P2_X,P2_Y,P1_X) && last_Space_Check( P2_X,P2_Y,P1_X)==true)){
@@ -235,7 +247,7 @@ public class CB_Methods {
             }else{
                 if ((P1_X - P2_X) >= 1) {//postive or neg version
                     for (int i = 1; i < movement; i++) {
-                        if (new_Block_Check(P1_X - i, P1_Y) == false) {
+                        if (run_Block_Check(P1_X - i, P1_Y) == false) {
                             crossMvtAnswer = false;
                         }
                         System.out.println("after cross_Mvt_Check loop 3: crossMvtAnswer: " + crossMvtAnswer);
@@ -249,7 +261,7 @@ public class CB_Methods {
 
                 } else {
                     for (int i = 1; i < movement; i++) {
-                        if (new_Block_Check(P1_X + i, P1_Y) == false) {
+                        if (run_Block_Check(P1_X + i, P1_Y) == false) {
                             crossMvtAnswer = false;
                         }
                         System.out.println("after cross_Mvt_Check loop 4: crossMvtAnswer: " + crossMvtAnswer);
@@ -282,7 +294,7 @@ public class CB_Methods {
             if ((P1_X < P2_X && P1_Y < P2_Y)){//down LR  postive only
                 //if ((P1_X-P2_X)>=1){//<---- (i think we can do without this if , but need to check.)
                     for (int i = 1; i < movement; i++) {
-                        if (new_Block_Check(P1_X+i,P1_Y+i) == false){diagMvtAnswer = false;}
+                        if (run_Block_Check(P1_X+i,P1_Y+i) == false){diagMvtAnswer = false;}
                         System.out.println("after diag_Mvt_Check loop 1: diagMvtAnswer: "+diagMvtAnswer);
                     }
                 if (diagMvtAnswer.equals(last_Space_Check( P2_X,P2_Y,P1_X) && last_Space_Check( P2_X,P2_Y,P1_X)==true)){
@@ -294,7 +306,7 @@ public class CB_Methods {
 
                 //postive or neg version
                     for (int i = 1; i < movement; i++) {
-                        if (new_Block_Check(P1_X-i,P1_Y-i) == false){diagMvtAnswer = false;}
+                        if (run_Block_Check(P1_X-i,P1_Y-i) == false){diagMvtAnswer = false;}
                         System.out.println("after diag_Mvt_Check loop 2: diagMvtAnswer: "+diagMvtAnswer);
                     }
                 if (diagMvtAnswer.equals(last_Space_Check( P2_X,P2_Y,P1_X) && last_Space_Check( P2_X,P2_Y,P1_X)==true)){
@@ -313,7 +325,7 @@ public class CB_Methods {
 
                 // postive version
                     for (int i = 1; i < movement; i++) {
-                        if (new_Block_Check(P1_X+i,P1_Y-i) == false){diagMvtAnswer = false;}
+                        if (run_Block_Check(P1_X+i,P1_Y-i) == false){diagMvtAnswer = false;}
                         System.out.println("after diag_Mvt_Check loop 3: diagMvtAnswer: "+diagMvtAnswer);
                     }
                 if (diagMvtAnswer.equals(last_Space_Check( P2_X,P2_Y,P1_X) && last_Space_Check( P2_X,P2_Y,P1_X)==true)){ // need to run twice but i don't want it to output two times
@@ -324,7 +336,7 @@ public class CB_Methods {
 
             }else if ((P1_X > P2_X && P1_Y < P2_Y)){//else up LR negative X only
                     for (int i = 1; i < movement; i++) {
-                        if (new_Block_Check(P1_X-i,P1_Y+i) == false){diagMvtAnswer = false;}
+                        if (run_Block_Check(P1_X-i,P1_Y+i) == false){diagMvtAnswer = false;}
                         System.out.println("after diag_Mvt_Check loop 4: diagMvtAnswer: "+diagMvtAnswer);
                     }
                 if (diagMvtAnswer.equals(last_Space_Check( P2_X,P2_Y,P1_X) && last_Space_Check( P2_X,P2_Y,P1_X)==true)){
@@ -346,7 +358,7 @@ public class CB_Methods {
     public static boolean last_Space_Check(int P2_X,int P2_Y,int P1_X){
         Boolean LSCAnswer = true;
         System.out.println("checking final space");
-        if (!(new_Block_Check(P2_X,P2_Y))){
+        if (!(run_Block_Check(P2_X,P2_Y))){
             System.out.println("ignore last output ");
             if (attack_Check(P2_X,P2_Y,P1_X)){
                 System.out.println("passed attack check");

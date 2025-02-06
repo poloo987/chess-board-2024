@@ -1,13 +1,8 @@
 package pages;
 
-import javax.swing.*;
-import java.io.File;
 import java.io.FileNotFoundException;
-import java.io.PrintWriter;
-import java.util.Scanner;
 
-import static pages.CB_Save_Methods.boardUpdate;
-import static pages.CB_Save_Methods.run_SaveFile;
+import static pages.CB_SaveFile_Methods.*;
 
 public class CB_GameBoard extends CB_Methods {
 
@@ -32,41 +27,52 @@ public class CB_GameBoard extends CB_Methods {
         };
 
     public static void gameSetup() throws FileNotFoundException {
+
         run_SaveFile();
         boardUpdate();
 
     }
 
-    public static void rungame()  {
-        boolean runAnswer = true;
-        String PT = "W";
+    public static void rungame() throws FileNotFoundException {
+        boolean loopOn = true;
+        String PT = "W";int PTCount = 1;
 
         System.out.println("let the game begin !");
-        System.out.println("white team will go first -player");
+        showGameTime();
+        System.out.println("white team will go first ");
         do {
-            System.out.println("to end the game type:  ");
-            answer = User_answer.nextLine();
-            if(answer.equals("Quit")){runAnswer = false;}
-            System.out.println("type w or B ");
-            PT = User_answer.nextLine();
-            select_Piece(PT);
 
-    } while (!runAnswer);
+            switch (PT){
+                case"W":
+                    System.out.println("white's turn");
+                    break;
+                case"B":
+                    System.out.println("black's turn");
+                    break;
+            }
+            System.out.println(" press any key to Start the turn or  type: Quit  ");
+            answer = User_answer.nextLine();
+            if(answer.equalsIgnoreCase("Quit")){loopOn = false ; showGameTime(); makeNewFile();System.exit(0);}
+            select_Piece(PT);
+            if (PTCount==1){PTCount=2;PT = "B";}else{PTCount=1;PT = "W";}
+    } while (loopOn);
 
     }
     public static void select_Piece(String PT)  {
     boolean test_CBgb = true;
-        do {
-        System.out.println("what piece do you want to move? input coordinate (A-H,1-8) ex:A2");
+    try {
+
+
+
+        System.out.println("what piece do you want to move? input coordinate ex:A2 Or ex:H7");
         answer = User_answer.nextLine();
         answer = getAnswerCheck(answer);
 
         Piece01_X = getCoord_X();//A
         Piece01_Y = getCoord_Y();//2
         PieceMain_01 = Chessborad [Piece01_Y][Piece01_X];
-        check_Team(PT);
-        } while (!test_CBgb);
-        test_CBgb = true;
+
+
         do {
         System.out.println("where do want to move it? ?");
         answer = User_answer.nextLine();
@@ -74,12 +80,17 @@ public class CB_GameBoard extends CB_Methods {
         Piece02_X = getCoord_X();//A
         Piece02_Y = getCoord_Y();//3
         PieceMain_02 = Chessborad [Piece02_Y][Piece02_X];
-        test_CBgb = check_movement();
-        // can add player quit choice later
-        } while (!test_CBgb);//tested -passed 11/27
+        if(check_color(PT)){
+            test_CBgb = check_movement();
+        }else { test_CBgb =false;}
+        } while (!test_CBgb);}catch (Exception e){
+        System.out.println("wolf caught an invalid input - please try again");
+        //System.exit(0);
+        select_Piece(PT);
+    }
         player_movement();
 
-        System.out.println("end");// don't for get to close your image so the program closes
+        System.out.println("end of turn ");// don't for get to close your image so the program closes
     }
 }
 

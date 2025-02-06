@@ -2,7 +2,7 @@ package Classes;
 
 
 import pages.CB_GameBoard;
-import pages.CB_Save_Methods;
+import pages.CB_SaveFile_Methods;
 
 import java.io.FileNotFoundException;
 
@@ -10,17 +10,21 @@ import java.io.FileNotFoundException;
 public class chessBoard_Runner_V03 {
     public static void main(String[] args) throws FileNotFoundException {
 //look up Coordinates.class in java
+        //ctrl alt L = format line
 
         // make this the home page
         CB_GameBoard getCB_GameBoard = new CB_GameBoard();
-        CB_Save_Methods getCB_SaveMethods = new CB_Save_Methods();
+        CB_SaveFile_Methods getCB_SaveMethods = new CB_SaveFile_Methods();
         System.out.println("welcome to the wolf's chess game ");
+        System.out.println(" game mode: CO-OP  ");
+        getCB_GameBoard.gameSetup();
+        getCB_GameBoard.rungame();
 
-        System.out.println("pick your game mode  ");
-        System.out.println("1 = chess match PvP ");
+       // System.out.println("pick your game mode  ");
+       // System.out.println("1 = chess match PvP ");
         //getCB_SaveMethods.run_SaveFile();
-        //getCB_GameBoard.gameSetup();
-        getCB_GameBoard.select_Piece("white");
+
+        //getCB_GameBoard.select_Piece("white");
 
         //System.out.println("2 = tutorial - comming soon  ");
         //answer = User_answer.nextLine();
