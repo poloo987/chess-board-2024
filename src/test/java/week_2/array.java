@@ -7,6 +7,8 @@ public class array {
                 {"enero", "febrero", ",marzo", "abril", "mayo", "junio", "julio", "agosto", "septiembre","noviembre","diciembre"}
         };
 
+        String[] numbers = {"uno", "dos", "tres"};
+
 
     }
 }
